@@ -1,0 +1,15 @@
+Source: salt-formula-influxdb
+Maintainer: Filip Pytloun <filip.pytloun@tcpcloud.eu>
+Section: admin
+Priority: optional
+Build-Depends: salt-master, python, python-yaml, debhelper (>= 9)
+Standards-Version: 3.9.6
+Homepage: http://www.tcpcloud.eu
+Vcs-Browser: https://github.com/tcpcloud/salt-formula-influxdb
+Vcs-Git: https://github.com/tcpcloud/salt-formula-influxdb.git
+
+Package: salt-formula-influxdb
+Architecture: all
+Depends: ${misc:Depends}, salt-master, reclass
+Description: InfluxDB Salt formula
+ Install and configure InfluxDB server.

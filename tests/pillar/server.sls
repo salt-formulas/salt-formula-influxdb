@@ -1,0 +1,3 @@
+influxdb:
+  server:
+    enabled: true

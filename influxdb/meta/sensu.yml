@@ -1,0 +1,8 @@
+{%- from "influxdb/map.jinja" import server with context -%}
+check:
+  local_influxdb_server_proc:
+    command: "PATH=$PATH:/usr/lib64/nagios/plugins:/usr/lib/nagios/plugins check_procs -C influxd -u influxdb -c 1:1"
+    interval: 30
+    occurrences: 3
+    subscribers:
+    - local-influxdb-server

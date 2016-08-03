@@ -1,0 +1,14 @@
+applications:
+- influxdb
+classes:
+- service.influxdb.support
+parameters:
+  influxdb:
+    server:
+      enabled: true
+      admin:
+        bind:
+          address: 127.0.0.1
+      http:
+        bind:
+          address: 127.0.0.1

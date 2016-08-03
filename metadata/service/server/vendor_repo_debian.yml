@@ -1,0 +1,13 @@
+parameters:
+  linux:
+    system:
+      repo:
+        influxdb:
+          # To have this working, set following structure:
+          # linux:
+          #   system:
+          #     os: ubuntu
+          #     dist: xenial
+          enabled: true
+          source: 'deb https://repos.influxdata.com/${linux:system:os} ${linux:system:dist} stable'
+          key_url: 'https://repos.influxdata.com/influxdb.key'
