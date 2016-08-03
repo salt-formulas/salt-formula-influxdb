@@ -1,0 +1,20 @@
+applications:
+- influxdb
+classes:
+- service.influxdb.support
+parameters:
+  influxdb:
+    server:
+      enabled: true
+      admin:
+        bind:
+          address: 0.0.0.0
+      http:
+        bind:
+          address: 0.0.0.0
+      meta:
+        bind:
+          address: 0.0.0.0
+          port: 8088
+          http_address: 0.0.0.0
+          port: 8091

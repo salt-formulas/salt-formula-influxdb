@@ -13,11 +13,20 @@ influxdb_config:
   - require:
     - pkg: influxdb_packages
 
+influxdb_default:
+  file.managed:
+  - name: /etc/default/influxdb
+  - source: salt://influxdb/files/default
+  - template: jinja
+  - require:
+    - pkg: influxdb_packages
+
 influxdb_service:
   service.running:
   - enable: true
   - name: {{ server.service }}
   - watch:
     - file: influxdb_config
+    - file: influxdb_default
 
 {%- endif %}

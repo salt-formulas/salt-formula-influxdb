@@ -1,0 +1,11 @@
+{%- from "influxdb/map.jinja" import server with context -%}
+{%- if server.cluster is defined %}
+{%- for member in server.cluster.members %}
+{%- if member.host != grains.fqdn %}
+INFLUXD_OPTS="-join {{ member.host }}:{{ member.port }}"
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+{#-
+vim: syntax=jinja
+-#}
