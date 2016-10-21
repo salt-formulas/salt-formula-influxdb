@@ -94,11 +94,11 @@ Deploy influxdb apt repository (using linux formula):
       system:
         os: ubuntu
         dist: xenial
-      repo:
-        influxdb:
-          enabled: true
-          source: 'deb https://repos.influxdata.com/${linux:system:os} ${linux:system:dist} stable'
-          key_url: 'https://repos.influxdata.com/influxdb.key'
+        repo:
+          influxdb:
+            enabled: true
+            source: 'deb https://repos.influxdata.com/${linux:system:os} ${linux:system:dist} stable'
+            key_url: 'https://repos.influxdata.com/influxdb.key'
 
 Read more
 =========
