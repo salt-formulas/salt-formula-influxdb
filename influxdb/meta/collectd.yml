@@ -1,8 +1,9 @@
 {%- if pillar.influxdb.server is defined %}
 {%- from "influxdb/map.jinja" import server with context %}
 
-{%- if server.admin.get('user', {}).get('enabled', False) and server.http.enabled %}
+{%- if server.get('enabled', False) %}
 local_plugin:
+{%- if server.admin.get('user', {}).get('enabled', False) and server.http.enabled %}
   influxdb:
     plugin: python
     template: influxdb/files/collectd_influxdb.conf
@@ -10,6 +11,7 @@ local_plugin:
     port: {{ server.http.bind.port }}
     username: {{ server.admin.user.name }}
     password: {{ server.admin.user.password  }}
+{%- endif %}
   collectd_processes:
     process:
       influxd: {}
