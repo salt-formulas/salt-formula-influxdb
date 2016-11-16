@@ -40,6 +40,20 @@ Single-node influxdb, SSL for http frontend:
               key_file: /etc/influxdb/ssl/key.pem
               cert_file: /etc/influxdb/ssl/cert.pem
 
+Single-node influxdb where you specify paths for data and metastore directories. You
+need to ensure that directories exist:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        enabled: true
+        data:
+          dir: '/opt/influxdb/data'
+          wal_dir: '/opt/influxdb/wal'
+        meta:
+          dir: '/opt/influxdb/meta'
+
 Single-node influxdb with an admin user:
 
 .. code-block:: yaml
