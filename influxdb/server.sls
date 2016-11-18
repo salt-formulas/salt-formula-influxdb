@@ -35,7 +35,7 @@ influxdb_service:
 {% set url_for_query = "http://{}:{}/query".format(server.http.bind.address, server.http.bind.port) %}
 {% set admin_created = false %}
 
-{%- if server.admin.get('user', {}).get('enabled', false) %}
+{%- if server.admin.get('user', {}).get('enabled', False) %}
   {% set query_create_admin = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}' WITH ALL PRIVILEGES\"".format(server.admin.user.name, server.admin.user.password) %}
   {% set admin_url = "http://{}:{}/query?u={}&p={}".format(server.http.bind.address, server.http.bind.port, server.admin.user.name, server.admin.user.password) %}
 influxdb_create_admin:
@@ -50,8 +50,8 @@ influxdb_create_admin:
 # An admin must exist before creating others users
 {%- if admin_created %}
   {%- for user_name, user in server.get('user', {}).iteritems() %}
-    {%- if user.get('enabled', false) %}
-      {%- if user.get('admin', false) %}
+    {%- if user.get('enabled', False) %}
+      {%- if user.get('admin', False) %}
         {% set query_create_user = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}' WITH ALL PRIVILEGES\"".format(user.name, user.password) %}
       {%- else %}
         {% set query_create_user = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}'\"".format(user.name, user.password) %}
@@ -67,7 +67,7 @@ influxdb_create_user_{{user.name}}:
 {%- endif %}
 
 {%- for db_name, db in server.get('database', {}).iteritems() %}
-  {%- if db.get('enabled', false) %}
+  {%- if db.get('enabled', False) %}
     {% set query_create_db = "--data-urlencode \"q=CREATE DATABASE {}\"".format(db.name) %}
 influxdb_create_db_{{db.name}}:
   cmd.run:
@@ -83,7 +83,7 @@ influxdb_create_db_{{db.name}}:
 # An admin must exist to manage grants, otherwise there is no user.
 {%- if admin_created %}
 {%- for grant_name, grant in server.get('grant', {}).iteritems() %}
-  {%- if grant.get('enabled', false) %}
+  {%- if grant.get('enabled', False) %}
     {% set query_grant_user_access = "--data-urlencode \"q=GRANT {} ON {} TO {}\"".format(grant.privilege, grant.database, grant.user) %}
 influxdb_grant_{{grant_name}}:
   cmd.run:
