@@ -40,6 +40,97 @@ Single-node influxdb, SSL for http frontend:
               key_file: /etc/influxdb/ssl/key.pem
               cert_file: /etc/influxdb/ssl/cert.pem
 
+Single-node influxdb where you specify paths for data and metastore directories. You
+need to ensure that directories exist:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        enabled: true
+        data:
+          dir: '/opt/influxdb/data'
+          wal_dir: '/opt/influxdb/wal'
+        meta:
+          dir: '/opt/influxdb/meta'
+
+Single-node influxdb with an admin user:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        enabled: true
+        http:
+          enabled: true
+          bind:
+            address: 0.0.0.0
+            port: 8086
+        admin:
+          enabled: true
+          bind:
+            address: 0.0.0.0
+            port: 8083
+          user:
+            enabled: true
+            name: root
+            password: secret
+
+Single-node influxdb with new users:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        user:
+          user1:
+            enabled: true
+            admin: true
+            name: username1
+            password: keepsecret1
+          user2:
+            enabled: true
+            admin: false
+            name: username2
+            password: keepsecret2
+
+Single-node influxdb with new databases:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        database:
+          mydb1:
+            enabled: true
+            name: mydb1
+          mydb2:
+            enabled: true
+            name: mydb2
+
+Here is how to manage grants on database:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        grant:
+          username1_mydb1:
+            enabled: true
+            user: username1
+            database: mydb1
+            privilege: all
+          username2_mydb1:
+            enabled: true
+            user: username2
+            database: mydb1
+            privilege: read
+          username2_mydb2:
+            enabled: true
+            user: username2
+            database: mydb2
+            privilege: write
+
 InfluxDB relay:
 
 .. code-block:: yaml

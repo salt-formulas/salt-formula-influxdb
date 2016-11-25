@@ -10,6 +10,7 @@ default:
     bind:
       address: 0.0.0.0
       port: 8086
+    log_enabled: false
   udp:
     enabled: false
     bind:
@@ -22,8 +23,11 @@ default:
       port: 8083
   data:
     enabled: true
+    dir: '/var/lib/influxdb/data'
+    wal_dir: '/var/lib/influxdb/wal'
   meta:
     enabled: true
+    dir: '/var/lib/influxdb/meta'
 {%- endload %}
 
 {%- set server = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('influxdb:server')) %}
