@@ -77,6 +77,31 @@ influxdb_create_db_{{db.name}}:
       - cmd: influxdb_create_admin
     {%- endif %}
   # TODO: manage database deletion
+
+    {% for rp in db.get('retention_policy', []) %}
+    {% set rp_name = rp.get('name', 'autogen') %}
+    {% if rp.get('is_default') %}
+      {% set is_default = 'DEFAULT' %}
+    {% else %}
+      {% set is_default = '' %}
+    {% endif %}
+    {% set duration = rp.get('duration', 'INF') %}
+    {% set replication = rp.get('replication', '1') %}
+    {% if rp.get('shard_duration') %}
+      {% set shard_duration = 'SHARD DURATION {}'.format(rp.shard_duration) %}
+    {% else %}
+      {% set shard_duration = '' %}
+    {% endif %}
+    {% set query_retention_policy = 'RETENTION POLICY {} ON {} DURATION {} REPLICATION {} {} {}'.format(
+        rp_name, db.name, duration, replication, shard_duration, is_default)
+    %}
+influxdb_retention_policy_{{db.name}}_{{ rp_name }}:
+  cmd.run:
+
+    - name: curl -s -S -POST "{{ url_for_query }}" --data-urlencode "q=CREATE {{ query_retention_policy }}"|grep -v "policy already exists" || curl -s -S -POST "{{ url_for_query }}" --data-urlencode "q=ALTER {{ query_retention_policy }}"
+    - require:
+      - cmd: influxdb_create_db_{{db.name}}
+    {%- endfor %}
   {%- endif %}
 {%- endfor %}
 

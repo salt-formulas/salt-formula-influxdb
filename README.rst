@@ -108,6 +108,30 @@ Single-node influxdb with new databases:
             enabled: true
             name: mydb2
 
+Manage the retention policies for a database:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        database:
+          mydb1:
+            enabled: true
+            name: mydb1
+            retention_policy:
+            - name: rp_db1
+              duration: 30d
+              replication: 1
+              is_default: true
+
+Where default values are:
+
+* name = autogen
+* duration = INF
+* replication = 1
+* is_default: false
+
+
 Here is how to manage grants on database:
 
 .. code-block:: yaml
