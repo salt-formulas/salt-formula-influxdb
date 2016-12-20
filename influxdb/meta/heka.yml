@@ -1,0 +1,45 @@
+{%- from "influxdb/map.jinja" import server with context %}
+{%- if server.get('enabled', False) %}
+metric_collector:
+  trigger:
+    influxdb_check:
+      description: 'InfluxDB cannot be checked'
+      severity: down
+      rules:
+      - metric: influxdb_check
+        relational_operator: '=='
+        threshold: 0
+        window: 60
+        periods: 0
+        function: last
+  alarm:
+    influxdb_check:
+      alerting: enabled
+      triggers:
+      - influxdb_check
+      dimension:
+        service: influxdb-check
+aggregator:
+  alarm_cluster:
+    influxdb_check:
+      policy: availability_of_members
+      alerting: enabled
+      match:
+        service: influxdb-check
+      group_by: hostname
+      members:
+      - influxdb_check
+      dimension:
+        service: influxdb
+        nagios_host: 01-service-clusters
+    influxdb:
+      policy: highest_severity
+      alerting: enabled_with_notification
+      match:
+        service: influxdb
+      members:
+      - influxdb_check
+      dimension:
+        cluster_name: influxdb
+        nagios_host: 00-top-clusters
+{%- endif %}
