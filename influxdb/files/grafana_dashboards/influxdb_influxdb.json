@@ -89,7 +89,7 @@
               ],
               "measurement": "influxdb_httpd_failed_auths",
               "policy": "default",
-              "query": "SELECT last(\"value\") FROM \"influxdb_httpd_failed_auths\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT last(\"value\") FROM \"influxdb_httpd_failed_auths\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -110,7 +110,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -122,7 +128,7 @@
           "valueMaps": [
             {
               "op": "=",
-              "text": "0",
+              "text": "N/A",
               "value": "null"
             }
           ],
@@ -185,7 +191,7 @@
               ],
               "measurement": "influxdb_httpd_query_requests",
               "policy": "default",
-              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_query_requests\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_query_requests\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -212,7 +218,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -235,7 +247,7 @@
               ],
               "measurement": "influxdb_httpd_write_requests",
               "policy": "default",
-              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_write_requests\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_write_requests\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "rawQuery": false,
               "refId": "B",
               "resultFormat": "time_series",
@@ -263,7 +275,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -286,7 +304,7 @@
               ],
               "measurement": "influxdb_httpd_ping_requests",
               "policy": "default",
-              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_ping_requests\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(last(\"value\"), 1s) FROM \"influxdb_httpd_ping_requests\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "rawQuery": false,
               "refId": "C",
               "resultFormat": "time_series",
@@ -314,7 +332,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -408,7 +432,7 @@
               "hide": false,
               "measurement": "influxdb_httpd_query_response_bytes",
               "policy": "default",
-              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_httpd_query_response_bytes\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_httpd_query_response_bytes\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -435,7 +459,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -458,7 +488,7 @@
               ],
               "measurement": "influxdb_httpd_write_request_bytes",
               "policy": "default",
-              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_httpd_write_request_bytes\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_httpd_write_request_bytes\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -485,7 +515,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -605,7 +641,7 @@
               ],
               "measurement": "influxdb_go_routines",
               "policy": "default",
-              "query": "SELECT last(\"value\") FROM \"influxdb_go_routines\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT last(\"value\") FROM \"influxdb_go_routines\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -626,7 +662,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -701,7 +743,7 @@
               ],
               "measurement": "influxdb_memory_mallocs",
               "policy": "default",
-              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_mallocs\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_mallocs\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -728,7 +770,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -751,7 +799,7 @@
               ],
               "measurement": "influxdb_memory_frees",
               "policy": "default",
-              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_frees\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_frees\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -778,7 +826,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -801,7 +855,7 @@
               ],
               "measurement": "influxdb_memory_lookups",
               "policy": "default",
-              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_lookups\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT derivative(mean(\"value\"), 1s) FROM \"influxdb_memory_lookups\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "C",
               "resultFormat": "time_series",
               "select": [
@@ -828,7 +882,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -921,7 +981,7 @@
               ],
               "measurement": "influxdb_memory_system",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"influxdb_memory_system\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT mean(\"value\") FROM \"influxdb_memory_system\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -942,7 +1002,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -965,7 +1031,7 @@
               ],
               "measurement": "influxdb_memory_alloc",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"influxdb_memory_alloc\" WHERE \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
+              "query": "SELECT mean(\"value\") FROM \"influxdb_memory_alloc\" WHERE \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(null)",
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -986,7 +1052,13 @@
                 {
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -1101,7 +1173,7 @@
               ],
               "measurement": "lma_components_threads",
               "policy": "default",
-              "query": "SELECT last(\"value\") FROM \"lma_components_threads\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval)",
+              "query": "SELECT last(\"value\") FROM \"lma_components_threads\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1128,7 +1200,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -1205,7 +1283,7 @@
               ],
               "measurement": "lma_components_memory_rss",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"lma_components_memory_rss\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT mean(\"value\") FROM \"lma_components_memory_rss\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1232,7 +1310,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -1326,7 +1410,7 @@
               ],
               "measurement": "lma_components_disk_bytes_read",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"lma_components_disk_bytes_read\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT mean(\"value\") FROM \"lma_components_disk_bytes_read\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1353,7 +1437,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -1378,7 +1468,7 @@
               ],
               "measurement": "lma_components_disk_bytes_write",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"lma_components_disk_bytes_write\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT mean(\"value\") FROM \"lma_components_disk_bytes_write\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -1405,7 +1495,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -1499,7 +1595,7 @@
               ],
               "measurement": "lma_components_cputime_syst",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"lma_components_cputime_syst\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT mean(\"value\") FROM \"lma_components_cputime_syst\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "A",
               "resultFormat": "time_series",
               "select": [
@@ -1526,7 +1622,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             },
@@ -1551,7 +1653,7 @@
               ],
               "measurement": "lma_components_cputime_user",
               "policy": "default",
-              "query": "SELECT mean(\"value\") FROM \"lma_components_cputime_user\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
+              "query": "SELECT mean(\"value\") FROM \"lma_components_cputime_user\" WHERE \"service\" = 'influxd' AND \"hostname\" =~ /^$server$/ AND $timeFilter GROUP BY time($interval) fill(0)",
               "refId": "B",
               "resultFormat": "time_series",
               "select": [
@@ -1578,7 +1680,13 @@
                   "condition": "AND",
                   "key": "hostname",
                   "operator": "=~",
-                  "value": "/$server$/"
+                  "value": "/^$server$/"
+                },
+                {
+                  "condition": "AND",
+                  "key": "environment_label",
+                  "operator": "=~",
+                  "value": "/^$environment$/"
                 }
               ]
             }
@@ -1689,5 +1797,5 @@
   },
   "timezone": "browser",
   "title": "InfluxDB",
-  "version": 4
+  "version": 5
 }
