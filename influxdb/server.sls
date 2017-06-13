@@ -1,14 +1,6 @@
 {%- from "influxdb/map.jinja" import server with context %}
-{% from "linux/map.jinja" import system with context %}
 
 {%- if server.enabled %}
-
-linux_packages:
-  pkg.installed:
-    - pkgs: {{ system.pkgs }}
-
-include:
-  - linux.system.repo
 
 influxdb_packages:
   pkg.installed:

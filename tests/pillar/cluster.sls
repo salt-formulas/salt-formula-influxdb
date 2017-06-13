@@ -23,11 +23,3 @@ influxdb:
           port: 8091
         - host: idb03.local
           port: 8091
-linux:
-  system:
-    enabled: true
-    repo:
-      docker:
-        source: 'deb https://repos.influxdata.com/ubuntu {{ grains.get('oscodename') }} stable'
-        key_url: https://repos.influxdata.com/influxdb.key
-        file: /etc/apt/sources.list
