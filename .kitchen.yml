@@ -17,12 +17,16 @@ provisioner:
   state_top:
     base:
       "*":
+        - linux
         - influxdb
   pillars:
     top.sls:
       base:
         "*":
+          - linux_repo_influxdata
           - influxdb
+  pillars-from-files:
+    linux_repo_influxdata.sls: tests/pillar/repo_influxdata.sls
   dependencies:
     - name: linux
       repo: git

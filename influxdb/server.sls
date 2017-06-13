@@ -1,14 +1,6 @@
 {%- from "influxdb/map.jinja" import server with context %}
-{% from "linux/map.jinja" import system with context %}
 
 {%- if server.enabled %}
-
-linux_packages:
-  pkg.installed:
-    - pkgs: {{ system.pkgs }}
-
-include:
-  - linux.system.repo
 
 influxdb_packages:
   pkg.installed:
@@ -30,8 +22,6 @@ influxdb_default:
   - require:
     - pkg: influxdb_packages
 
-{%- if not grains.get('noservices', False) %}
-
 influxdb_service:
   service.running:
   - enable: true
@@ -39,11 +29,12 @@ influxdb_service:
   # This delay is needed before being able to send data to server to create
   # users and databases.
   - init_delay: 5
+  {%- if grains.get('noservices') %}
+  - onlyif: /bin/false
+  {%- endif %}
   - watch:
     - file: influxdb_config
     - file: influxdb_default
-
-{%- endif %}
 
 {% set url_for_query = "http://{}:{}/query".format(server.http.bind.address, server.http.bind.port) %}
 {% set admin_created = false %}
@@ -54,10 +45,8 @@ influxdb_service:
 influxdb_create_admin:
   cmd.run:
   - name: curl -f -S -POST "{{ url_for_query }}" {{ query_create_admin }} || curl -f -S -POST "{{ admin_url }}" {{ query_create_admin }}
-  {%- if not grains.get('noservices', False) %}
   - require:
     - service: influxdb_service
-  {%- endif %}
   {% set url_for_query = admin_url %}
   {% set admin_created = true %}
 {%- endif %}
