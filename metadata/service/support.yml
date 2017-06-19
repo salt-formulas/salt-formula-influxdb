@@ -11,3 +11,5 @@ parameters:
         enabled: false
       grafana:
         enabled: true
+      telegraf:
+        enabled: true
