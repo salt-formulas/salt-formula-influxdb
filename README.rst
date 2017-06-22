@@ -63,6 +63,11 @@ InfluxDB server with customized parameters for the data service:
         enabled: true
         data:
           max_series_per_database: 20000000
+          cache_max_memory_size: 524288000
+          cache_snapshot_memory_size: 26214400
+          cache_snapshot_write_cold_duration: "5m"
+          compact_full_write_cold_duration: "2h"2h"
+          max_values_per_tag: 5000
 
 Single-node influxdb with an admin user:
 
