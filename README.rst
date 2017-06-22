@@ -54,6 +54,16 @@ need to ensure that directories exist:
         meta:
           dir: '/opt/influxdb/meta'
 
+InfluxDB server with customized parameters for the data service:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        enabled: true
+        data:
+          max_series_per_database: 20000000
+
 Single-node influxdb with an admin user:
 
 .. code-block:: yaml
