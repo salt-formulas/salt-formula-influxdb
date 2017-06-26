@@ -1,4 +1,9 @@
 dashboard:
-  influxdb:
+  influxdb_prometheus:
+    datasource: prometheus
+    format: json
+    template: influxdb/files/grafana_dashboards/influxdb_prometheus.json
+  influxdb_influxdb:
+    datasource: influxdb
     format: json
     template: influxdb/files/grafana_dashboards/influxdb_influxdb.json
