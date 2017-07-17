@@ -41,3 +41,8 @@ default:
     'dropped_points_percentage': 5,
   },
 }, grain='os_family', merge=salt['pillar.get']('influxdb:monitoring')) %}
+
+{%- set client = salt['grains.filter_by']({
+    'default': {
+    },
+}, merge=salt['pillar.get']('influxdb:client')) %}

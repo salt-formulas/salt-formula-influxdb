@@ -230,6 +230,40 @@ Deploy influxdb apt repository (using linux formula):
             source: 'deb https://repos.influxdata.com/${linux:system:os} ${linux:system:dist} stable'
             key_url: 'https://repos.influxdata.com/influxdb.key'
 
+InfluxDB client for configuring databases, users and retention policies:
+
+.. code-block:: yaml
+
+    influxdb:
+      client:
+        enabled: true
+        server:
+          protocol: http
+          host: 127.0.0.1
+          port: 8086
+          user: admin
+          password: foobar
+        user:
+          user1:
+            enabled: true
+            admin: true
+            name: username1
+        database:
+          mydb1:
+            enabled: true
+            name: mydb1
+            retention_policy:
+            - name: rp_db1
+              duration: 30d
+              replication: 1
+              is_default: true
+        grant:
+          username1_mydb1:
+            enabled: true
+            user: username1
+            database: mydb1
+            privilege: all
+
 Read more
 =========
 

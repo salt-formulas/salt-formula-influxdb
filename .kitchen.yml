@@ -44,6 +44,11 @@ platforms:
 
 suites:
 
+  - name: client
+    provisioner:
+      pillars-from-files:
+        influxdb.sls: tests/pillar/client.sls
+
   - name: cluster
     provisioner:
       pillars-from-files:

@@ -1,0 +1,6 @@
+applications:
+- influxdb
+parameters:
+  influxdb:
+    client:
+      enabled: true
