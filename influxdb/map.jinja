@@ -1,10 +1,10 @@
-
-
 {%- load_yaml as base_defaults %}
 default:
   pkgs:
   - influxdb
   service: influxdb
+  container_mode: false
+  prefix_dir: /
   reporting_disabled: true
   http:
     enabled: true

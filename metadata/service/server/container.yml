@@ -1,0 +1,15 @@
+applications:
+- influxdb
+classes:
+- service.influxdb.support
+parameters:
+  influxdb:
+    server:
+      enabled: true
+      container_mode: true
+      admin:
+        bind:
+          address: 0.0.0.0
+      http:
+        bind:
+          address: 0.0.0.0

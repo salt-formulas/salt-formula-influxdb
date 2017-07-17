@@ -2,18 +2,30 @@
 
 {%- if server.enabled %}
 
+{%- if not server.container_mode %}
 influxdb_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
+{%- endif %}
+
+{{ server.prefix_dir }}/etc/influxdb:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 755
+    - makedirs: True
 
 influxdb_config:
   file.managed:
-  - name: /etc/influxdb/influxdb.conf
+  - name: {{ server.prefix_dir }}/etc/influxdb/influxdb.conf
   - source: salt://influxdb/files/influxdb.conf
   - template: jinja
+{%- if not server.container_mode %}
   - require:
     - pkg: influxdb_packages
+{%- endif %}
 
+{%- if not server.container_mode %}
 influxdb_default:
   file.managed:
   - name: /etc/default/influxdb
@@ -21,6 +33,7 @@ influxdb_default:
   - template: jinja
   - require:
     - pkg: influxdb_packages
+{%- endif %}
 
 influxdb_service:
   service.running:
@@ -29,17 +42,19 @@ influxdb_service:
   # This delay is needed before being able to send data to server to create
   # users and databases.
   - init_delay: 5
-  {%- if grains.get('noservices') %}
+{%- if grains.get('noservices') or server.container_mode %}
   - onlyif: /bin/false
-  {%- endif %}
+{%- endif %}
   - watch:
     - file: influxdb_config
+{%- if not server.container_mode %}
     - file: influxdb_default
+{%- endif %}
 
 {% set url_for_query = "http://{}:{}/query".format(server.http.bind.address, server.http.bind.port) %}
 {% set admin_created = false %}
 
-{%- if server.admin.get('user', {}).get('enabled', False) %}
+{%- if not server.container_mode and server.admin.get('user', {}).get('enabled', False) %}
   {% set query_create_admin = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}' WITH ALL PRIVILEGES\"".format(server.admin.user.name, server.admin.user.password) %}
   {% set admin_url = "http://{}:{}/query?u={}&p={}".format(server.http.bind.address, server.http.bind.port, server.admin.user.name, server.admin.user.password) %}
 influxdb_create_admin:
