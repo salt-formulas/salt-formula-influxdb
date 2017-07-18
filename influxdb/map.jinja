@@ -33,3 +33,11 @@ default:
 {%- endload %}
 
 {%- set server = salt['grains.filter_by'](base_defaults, merge=salt['pillar.get']('influxdb:server')) %}
+
+{%- set monitoring = salt['grains.filter_by']({
+  'default': {
+    'http_errors_percentage': 5,
+    'failed_points_percentage': 5,
+    'dropped_points_percentage': 5,
+  },
+}, grain='os_family', merge=salt['pillar.get']('influxdb:monitoring')) %}

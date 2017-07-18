@@ -1,5 +1,5 @@
 {%- if pillar.influxdb.server is defined %}
-{%- from "influxdb/map.jinja" import server with context %}
+{%- from "influxdb/map.jinja" import server, monitoring with context %}
 
 {%- if server.get('enabled', False) %}
 server:
@@ -17,7 +17,7 @@ server:
       {% endraw %}
 {%- if server.get('http', {}).get('enabled', False) %}
     InfluxdbHTTPClientError:
-      {%- set influx_http_client_error_threshold = prometheus_server.get('alert', {}).get('InfluxdbHTTPClientError', {}).get('var', {}).get('threshold', 5) %}
+      {%- set influx_http_client_error_threshold = monitoring.http_errors_percentage %}
       if: >-
         rate(influxdb_httpd_clientError[2m]) / rate(influxdb_httpd_req[2m]) * 100 > {{ influx_http_client_error_threshold }}
       {% raw %}
@@ -28,7 +28,7 @@ server:
         summary: 'Influxdb number of client errors is high'
         description: '{{ printf `%.1f` $value }}% of client requests are in error on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_client_error_threshold }}).'
     InfluxdbHTTPPointsWrittenFail:
-      {%- set influx_http_points_written_fail_threshold = prometheus_server.get('alert', {}).get('InfluxdbHTTPPointsWrittenFail', {}).get('var', {}).get('threshold', 5) %}
+      {%- set influx_http_points_written_fail_threshold = monitoring.failed_points_percentage %}
       if: >-
         rate(influxdb_httpd_pointsWrittenFail[2m]) / rate(influxdb_httpd_pointsWrittenOK[2m]) * 100 > {{ influx_http_points_written_fail_threshold }}
       {% raw %}
@@ -39,7 +39,7 @@ server:
         summary: 'Influxdb too many failed writes'
         description: '{{ printf `%.1f` $value }}% of written points have failed on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_points_written_fail_threshold }}).'
     InfluxdbHTTPPointsWrittenDropped:
-      {%- set influx_http_points_written_dropped_threshold = prometheus_server.get('alert', {}).get('InfluxdbHTTPPointsWrittenDropped', {}).get('var', {}).get('threshold', 5) %}
+      {%- set influx_http_points_written_dropped_threshold = monitoring.dropped_points_percentage %}
       if: >-
         rate(influxdb_httpd_pointsWrittenDropped[2m]) / rate(influxdb_httpd_pointsWrittenOK[2m]) * 100 > {{ influx_http_points_written_dropped_threshold }}
       {% raw %}
