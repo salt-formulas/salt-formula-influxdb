@@ -4,18 +4,18 @@
 {%- if server.get('enabled', False) %}
 server:
   alert:
-    ProcstatRunningInfluxdb:
+{%- if server.get('http', {}).get('enabled', False) %}
+    InfluxdbQDown:
       if: >-
-        procstat_running{process_name="influxdb"} == 0
-      {% raw %}
+        influxdb_up != 1
       labels:
         severity: warning
         service: influxdb
       annotations:
-        summary: 'Influxdb service is down'
-        description: 'Influxdb service is down on node {{ $labels.host }}'
+        summary: 'InfluxDB service down'
+      {% raw %}
+        description: 'InfluxDB service is down on node {{ $labels.host }}'
       {% endraw %}
-{%- if server.get('http', {}).get('enabled', False) %}
     InfluxdbHTTPClientError:
       {%- set influx_http_client_error_threshold = monitoring.http_errors_percentage %}
       if: >-

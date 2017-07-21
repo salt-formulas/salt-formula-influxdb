@@ -4,10 +4,6 @@
 {%- if server.get('enabled', False) and server.get('http', {}).get('enabled', False) %}
 agent:
   input:
-    procstat:
-      process:
-        influxdb:
-          exe: influxd
     influxdb:
       servers:
         - url: http://{{ server.http.bind.address|replace('0.0.0.0', '127.0.0.1') }}:{{ server.http.bind.port }}/debug/vars
