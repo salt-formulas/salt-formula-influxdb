@@ -27,6 +27,7 @@ default:
     dir: '/var/lib/influxdb/data'
     wal_dir: '/var/lib/influxdb/wal'
     query_log_enabled: false
+    max_series_per_database: 1000000
   meta:
     enabled: true
     dir: '/var/lib/influxdb/meta'
@@ -36,6 +37,7 @@ default:
 
 {%- set monitoring = salt['grains.filter_by']({
   'default': {
+    'max_series_percentage': 95,
     'http_errors_percentage': 5,
     'failed_points_percentage': 5,
     'dropped_points_percentage': 5,

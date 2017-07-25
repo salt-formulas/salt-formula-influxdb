@@ -5,18 +5,39 @@
 server:
   alert:
 {%- if server.get('http', {}).get('enabled', False) %}
-    InfluxdbQDown:
+    InfluxdbDown:
       if: >-
         influxdb_up != 1
       labels:
         severity: warning
         service: influxdb
       annotations:
+      {%- raw %}
         summary: 'InfluxDB service down'
-      {% raw %}
         description: 'InfluxDB service is down on node {{ $labels.host }}'
-      {% endraw %}
-    InfluxdbHTTPClientError:
+      {%- endraw %}
+    InfluxdbSeriesNumberHigh:
+      {%- set influx_max_series_threshold = monitoring.max_series_percentage * server.data.max_series_per_database / 100 %}
+      if: >-
+        influxdb_database_numSeries >= {{ influx_max_series_threshold }}
+      labels:
+        severity: warning
+        service: influxdb
+      annotations:
+      {% raw %}
+        summary: 'InfluxDB high number of series for {{ $labels.database }}'
+        description: 'The InfluxDB {{ $labels.database }} database is getting close to the maximum number of series (value={{ $value }}{%- endraw %},threshold={{ influx_max_series_threshold }}).'
+    InfluxdbSeriesNumberTooHigh:
+      if: >-
+        influxdb_database_numSeries >= {{ server.data.max_series_per_database }}
+      labels:
+        severity: critical
+        service: influxdb
+      annotations:
+      {% raw %}
+        summary: 'InfluxDB too many series for {{ $labels.database }}'
+        description: 'The InfluxDB {{ $labels.database }} database has exceeded the maximum number of series (value={{ $value }}{%- endraw %},threshold={{ server.data.max_series_per_database }}).'
+    InfluxdbHTTPClientErrors:
       {%- set influx_http_client_error_threshold = monitoring.http_errors_percentage %}
       if: >-
         rate(influxdb_httpd_clientError[2m]) / rate(influxdb_httpd_req[2m]) * 100 > {{ influx_http_client_error_threshold }}
