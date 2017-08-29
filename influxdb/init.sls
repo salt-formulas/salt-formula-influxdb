@@ -6,4 +6,7 @@ include:
 {%- if pillar.influxdb.client is defined %}
 - influxdb.client
 {%- endif %}
+{%- if pillar.influxdb.relay is defined %}
+- influxdb.relay
+{%- endif %}
 {%- endif %}

@@ -1,0 +1,38 @@
+applications:
+- influxdb
+classes:
+- service.influxdb.support
+parameters:
+  _param:
+    influxdb_relay_timeout: 10s
+    influxdb_relay_buffer_size_mb: 512
+    influxdb_relay_max_batch_kb: 512
+    influxdb_relay_max_delay_inteval: 10s
+  influxdb:
+    relay:
+      enabled: true
+      listen:
+        http:
+          type: http
+          bind:
+            address: ${_param:cluster_local_address}
+            port: 9096
+          output:
+            influxdb01:
+              location: http://${_param:cluster_node01_address}:8086/write
+              timeout: ${_param:influxdb_relay_timeout}
+              buffer_size_mb: ${_param:influxdb_relay_buffer_size_mb}
+              max_batch_kb: ${_param:influxdb_relay_max_batch_kb}
+              max_delay_interval: ${_param:influxdb_relay_max_delay_inteval}
+            influxdb02:
+              location: http://${_param:cluster_node02_address}:8086/write
+              timeout: ${_param:influxdb_relay_timeout}
+              buffer_size_mb: ${_param:influxdb_relay_buffer_size_mb}
+              max_batch_kb: ${_param:influxdb_relay_max_batch_kb}
+              max_delay_interval: ${_param:influxdb_relay_max_delay_inteval}
+            influxdb03:
+              location: http://${_param:cluster_node03_address}:8086/write
+              timeout: ${_param:influxdb_relay_timeout}
+              buffer_size_mb: ${_param:influxdb_relay_buffer_size_mb}
+              max_batch_kb: ${_param:influxdb_relay_max_batch_kb}
+              max_delay_interval: ${_param:influxdb_relay_max_delay_inteval}
