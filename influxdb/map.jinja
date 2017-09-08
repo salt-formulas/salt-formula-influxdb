@@ -54,5 +54,6 @@ default:
         'pkgs': ['influxdb-relay'],
         'service': 'influxdb-relay',
         'listen': {},
+        'telemetry': {},
     },
 }, merge=salt['pillar.get']('influxdb:relay')) %}

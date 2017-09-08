@@ -1,7 +1,7 @@
 {%- if pillar.influxdb.server is defined %}
-{%- from "influxdb/map.jinja" import server, monitoring with context %}
+{%- from "influxdb/map.jinja" import server, relay, monitoring with context %}
 
-{%- if server.get('enabled', False) %}
+{%- if server.get('enabled', False) or relay.get('enabled') %}
 server:
   alert:
 {%- if server.get('http', {}).get('enabled', False) %}
@@ -71,5 +71,28 @@ server:
         summary: 'Influxdb too many dropped writes'
         description: '{{ printf `%.1f` $value }}% of written points have been dropped on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_points_written_dropped_threshold }}).'
 {%- endif %}
+
+{%- if relay.get('enabled') and relay.telemetry.get('enabled') %}
+
+{%- set addresses = [] %}
+{%- if relay.telemetry.get('bind', {}).address is defined and not relay.telemetry.bind.address.startswith('127') and relay.telemetry.bind.address != '0.0.0.0' %}
+{%- do addresses.append(relay.telemetry.bind.address) %}
+{%- endif %}
+{%- for address in grains['fqdn_ip4'] %}
+{%- if not address.startswith('127') %}
+{%- do addresses.append(address) %}
+{%- endif %}
+{%- endfor %}
+
+  target:
+    static:
+      influxdb_relay:
+        enabled: true
+        endpoint:
+        - address: {{ addresses[0] }}
+          port: {{ relay.telemetry.bind.port }}
+
+{%- endif %}
+
 {%- endif %}
 {%- endif %}
