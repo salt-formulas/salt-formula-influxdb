@@ -565,7 +565,7 @@
         "query": "label_values(influxdb_httpd_authFail, host)",
         "refresh": 1,
         "regex": "",
-        "sort": 0,
+        "sort": 1,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
