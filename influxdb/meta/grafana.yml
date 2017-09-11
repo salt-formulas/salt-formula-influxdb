@@ -7,3 +7,7 @@ dashboard:
     datasource: influxdb
     format: json
     template: influxdb/files/grafana_dashboards/influxdb_influxdb.json
+  influxdb_relay_prometheus:
+    datasource: prometheus
+    format: json
+    template: influxdb/files/grafana_dashboards/influxdb_relay_prometheus.json
