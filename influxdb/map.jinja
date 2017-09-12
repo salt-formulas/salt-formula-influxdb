@@ -41,6 +41,8 @@ default:
     'http_errors_percentage': 5,
     'failed_points_percentage': 5,
     'dropped_points_percentage': 5,
+    'max_relay_buffer_percentage': 70,
+    'relay_failed_requests_percentage': 5,
   },
 }, grain='os_family', merge=salt['pillar.get']('influxdb:monitoring')) %}
 
