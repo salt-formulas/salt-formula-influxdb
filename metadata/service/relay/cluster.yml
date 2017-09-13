@@ -11,6 +11,11 @@ parameters:
   influxdb:
     relay:
       enabled: true
+      telemetry:
+        enabled: true
+        bind:
+          address: ${_param:cluster_local_address}
+          port: 9196
       listen:
         http:
           type: http

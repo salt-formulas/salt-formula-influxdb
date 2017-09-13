@@ -1,6 +1,11 @@
 influxdb:
   relay:
     enabled: true
+    telemetry:
+      enabled: true
+      bind:
+        address: 127.0.0.1
+        port: 9196
     listen:
       http_backend:
         type: http
