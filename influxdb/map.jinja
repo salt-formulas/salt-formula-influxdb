@@ -3,6 +3,8 @@ default:
   pkgs:
   - influxdb
   service: influxdb
+  service_user: influxdb
+  service_group: influxdb
   container_mode: false
   prefix_dir: /
   reporting_disabled: true
