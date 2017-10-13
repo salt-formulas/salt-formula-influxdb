@@ -43,6 +43,8 @@ default:
     'dropped_points_percentage': 5,
     'max_relay_buffer_percentage': 70,
     'relay_failed_requests_percentage': 5,
+    'service_failed_warning_threshold_percent': 0.3,
+    'service_failed_critical_threshold_percent': 0.6,
   },
 }, grain='os_family', merge=salt['pillar.get']('influxdb:monitoring')) %}
 

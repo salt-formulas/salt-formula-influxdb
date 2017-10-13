@@ -5,17 +5,44 @@
 server:
   alert:
 {%- if server.get('http', {}).get('enabled', False) %}
-    InfluxdbDown:
+    InfluxdbInfo:
       if: >-
-        influxdb_up != 1
+        influxdb_up == 0
       labels:
-        severity: warning
+        severity: info
         service: influxdb
       annotations:
       {%- raw %}
         summary: 'InfluxDB service down'
         description: 'InfluxDB service is down on node {{ $labels.host }}'
       {%- endraw %}
+    InfluxdbWarning:
+      if: >-
+        count(influxdb_up == 0) >= count(influxdb_up) * {{ monitoring.service_failed_warning_threshold_percent }}
+      labels:
+        severity: warning
+        service: influxdb
+      annotations:
+        summary: 'More than {{monitoring.service_failed_warning_threshold_percent*100}}% of InfluxDB services are down'
+        description: 'More than {{monitoring.service_failed_warning_threshold_percent*100}}% of InfluxDB services are down'
+    InfluxdbCritical:
+      if: >-
+        count(influxdb_up == 0) >= count(influxdb_up) * {{ monitoring.service_failed_critical_threshold_percent }}
+      labels:
+        severity: critical
+        service: influxdb
+      annotations:
+        summary: 'More than {{monitoring.service_failed_critical_threshold_percent*100}}% of InfluxDB services are down'
+        description: 'More than {{monitoring.service_failed_critical_threshold_percent*100}}% of InfluxDB services are down'
+    InfluxdbDown:
+      if: >-
+        count(influxdb_up == 0) == count(influxdb_up)
+      labels:
+        severity: down
+        service: influxdb
+      annotations:
+        summary: 'All InfluxDB services are down'
+        description: 'All InfluxDB services are down'
     InfluxdbSeriesNumberHigh:
       {%- set influx_max_series_threshold = monitoring.max_series_percentage * server.data.max_series_per_database / 100 %}
       if: >-
