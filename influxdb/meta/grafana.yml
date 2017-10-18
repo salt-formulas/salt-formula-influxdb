@@ -11,3 +11,18 @@ dashboard:
     datasource: prometheus
     format: json
     template: influxdb/files/grafana_dashboards/influxdb_relay_prometheus.json
+  main_prometheus:
+    datasource: prometheus
+    row:
+      ost-middleware:
+        title: Middleware
+        panel:
+          influxdb:
+            title: InfluxDB
+            links:
+            - dashboard: InfluxDB
+              title: InfluxDB
+              type: dashboard
+            target:
+              cluster_status:
+                expr: avg(influxdb_up) by (name)
