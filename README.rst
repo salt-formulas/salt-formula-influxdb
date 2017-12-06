@@ -264,6 +264,20 @@ InfluxDB client for configuring databases, users and retention policies:
             database: mydb1
             privilege: all
 
+
+Create an continuous queries:
+
+.. code-block:: yaml
+
+    influxdb:
+      client:
+        database:
+          mydb1:
+            continuos_query:
+              cq_avg_bus_passengers: >-
+                SELECT mean("passengers") INTO "transportation"."three_weeks"."average_passengers" FROM "bus_data" GROUP BY time(1h)
+
+
 InfluxDB relay with HTTP outputs:
 
 .. code-block:: yaml
