@@ -1,7 +1,11 @@
 influxdb:
   server:
     enabled: true
+    data:
+      dir: /opt/influxdb/data
+      wal_dir: /opt/influxdb/wal
     meta:
+      dir: /opt/influxdb/meta
       enabled: true
       bind:
         address: 0.0.0.0
