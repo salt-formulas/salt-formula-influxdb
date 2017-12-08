@@ -25,6 +25,11 @@ influxdb:
         - name: rp_db2
           duration: 365d
           replication: 1
+        continuous_query:
+          cq_avg_passenger: >-
+            SELECT mean("passengers") INTO "transportation"."rp_db1"."average_passengers" FROM "_data" GROUP BY time(1h)
+          cq_basic_br: ->
+            SELECT mean(*) INTO "downsampled_transportation"."autogen".:MEASUREMENT FROM /.*/ GROUP BY time(30m),*
       mydb2:
         enabled: true
         name: mydb2

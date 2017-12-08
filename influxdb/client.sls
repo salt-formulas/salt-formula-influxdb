@@ -80,4 +80,18 @@ influxdb_grant_{{ grant_name }}:
   {%- endif %}
 {%- endfor %}
 
+
+{# CONTINUOUS QUERIES #}
+{%- for db_name, db in client.get('database', {}).iteritems() %}
+  {%- set db_name = db.get('name', db_name) %}
+  {%- for cq_name, cq in db.get('continuous_query', {}).iteritems() %}
+    {%- set query_continuous_query = 'CONTINUOUS QUERY {} ON {} BEGIN {} END'.format(cq_name, db_name, cq ) %}
+influxdb_continuous_query_{{db_name}}_{{ cq_name }}:
+  cmd.run:
+    - name: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=CREATE {{ query_continuous_query }}"|grep -v "already exists" || {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=ALTER {{ query_continuous_query }}"
+    - onlyif: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=SHOW DATABASES" | grep {{ db_name }}
+
+  {%- endfor %}
+{%- endfor %}
+
 {%- endif %}
