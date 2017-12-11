@@ -1,0 +1,14 @@
+
+{%- if pillar.get('influxdb', {}).get('client', {}).server is defined %}
+minion:
+  influxdb:
+    {%- from "influxdb/map.jinja" import client with context %}
+    host: {{ client.server.get('host') }}
+    port: {{ client.server.get('port') }}
+    {%- if client.server.user is defined %}
+    user: {{ client.server.user }}
+    {%- endif %}
+    {%- if client.server.password is defined %}
+    password: {{ client.server.password }}
+    {%- endif %}
+{%- endif %}
