@@ -18,16 +18,13 @@ influxdb_query_{{ db_name }}_{{ qr_name }}:
     influxdb.query:
       - database: {{ db_name }}
       - query: {{ query }}
-      {%- if grains.saltversion >= "2017.7" %}
-      - client_args:
-        host: {{ mconf.host }}
-        port: {{ mconf.port }}
-        {%- if qr.user is defined OR mconf.password is defined %}
-        user: {{ qr.get('user', mconf.user) }}
-        {%- endif %}
-        {%- if qr.password is defined OR mconf.password is defined %}
-        password: {{ qr.get('password', mconf.password) }}
-        {%- endif %}
+      - host: {{ mconf.host }}
+      - port: {{ mconf.port }}
+      {%- if qr.user is defined OR mconf.password is defined %}
+      - user: {{ qr.get('user', mconf.user) }}
+      {%- endif %}
+      {%- if qr.password is defined OR mconf.password is defined %}
+      - password: {{ qr.get('password', mconf.password) }}
       {%- endif %}
 {%- endfor %}
 {%- endfor %}
