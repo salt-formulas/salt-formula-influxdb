@@ -30,6 +30,13 @@ influxdb:
             SELECT mean("passengers") INTO "transportation"."rp_db1"."average_passengers" FROM "_data" GROUP BY time(1h)
           cq_basic_br: ->
             SELECT mean(*) INTO "downsampled_transportation"."autogen".:MEASUREMENT FROM /.*/ GROUP BY time(30m),*
+        query:
+          insert_h2o_dummy: >-
+            INSERT cpu,host=dummyA value=10
+          delete_h2o_dummy:
+            query: DELETE FROM "h2o_quality"
+            user: admin
+            password: foobar
       mydb2:
         enabled: true
         name: mydb2

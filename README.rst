@@ -273,9 +273,39 @@ Create an continuous queries:
       client:
         database:
           mydb1:
-            continuos_query:
+            continuous_query:
               cq_avg_bus_passengers: >-
                 SELECT mean("passengers") INTO "transportation"."three_weeks"."average_passengers" FROM "bus_data" GROUP BY time(1h)
+
+Prunning data and data management:
+
+Intended to use in scheduled jobs, executed to maintain data life cycle above retention policy. These states are executed by
+``query.sls`` and you are expected to trigger ``sls_id`` individually.
+
+.. code-block:: yaml
+
+    influxdb:
+      client:
+        database:
+          mydb1:
+            query:
+              drop_measurement_h2o: >-
+                DROP MEASUREMENT h2o_quality
+              drop_shard_h2o: >-
+                DROP SHARD h2o_quality
+              drop_series_h2o_feet: >-
+                DROP SERIES FROM "h2o_feet"
+              drop_series_h2o_feet_loc_smonica: >-
+                DROP SERIES FROM "h2o_feet" WHERE "location" = 'santa_monica'
+              delete_h2o_quality_rt3: >-
+                DELETE FROM "h2o_quality" WHERE "randtag" = '3'
+              delete_h2o_quality: >-
+                DELETE FROM "h2o_quality"
+
+
+.. code-block:: shell
+
+    salt \* state.sls_id influxdb_query_delete_h2o_quality influxdb.query
 
 
 InfluxDB relay with HTTP outputs:
