@@ -72,7 +72,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count_scalar(influxdb_up)",
+              "expr": "count(influxdb_up)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -88,7 +88,7 @@
           "valueMaps": [
             {
               "op": "=",
-              "text": "N/A",
+              "text": "0",
               "value": "null"
             }
           ],
@@ -151,7 +151,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count_scalar(influxdb_up == 1)",
+              "expr": "count(influxdb_up == 1)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -167,7 +167,7 @@
           "valueMaps": [
             {
               "op": "=",
-              "text": "N/A",
+              "text": "0",
               "value": "null"
             }
           ],
@@ -230,7 +230,7 @@
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count_scalar(influxdb_up == 0)",
+              "expr": "count(influxdb_up == 0)",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 2,
@@ -246,7 +246,7 @@
           "valueMaps": [
             {
               "op": "=",
-              "text": "N/A",
+              "text": "0",
               "value": "null"
             }
           ],
