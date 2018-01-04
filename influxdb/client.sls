@@ -90,7 +90,8 @@ influxdb_grant_{{ grant_name }}:
     {%- set query_continuous_query = '{} BEGIN {} END'.format(cq_name_on, cq) %}
 influxdb_continuous_query_{{db_name}}_{{ cq_name }}:
   cmd.run:
-    - name: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=CREATE {{ query_continuous_query }}"|grep -v "already exists" || {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode $'q=DROP {{ cq_name_on }};\nCREATE {{ query_continuous_query }}'| egrep -v error
+    - shell: /bin/bash
+    - name: fail_on() { echo $2; if [[ "$2" == *"$1"* ]]; then return 1; return 0; fi; }; fail_on "already exist" $({{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=CREATE {{ query_continuous_query }}") || fail_on error $({{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode $'q=DROP {{ cq_name_on }};\nCREATE {{ query_continuous_query }}')
     - onlyif: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=SHOW DATABASES" | grep {{ db_name }}
 
   {%- endfor %}
