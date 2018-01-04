@@ -82,13 +82,15 @@ influxdb_grant_{{ grant_name }}:
 
 
 {# CONTINUOUS QUERIES #}
+{# as of influxdb 1.4 CQ can't be altered #}
 {%- for db_name, db in client.get('database', {}).iteritems() %}
   {%- set db_name = db.get('name', db_name) %}
   {%- for cq_name, cq in db.get('continuous_query', {}).iteritems() %}
-    {%- set query_continuous_query = 'CONTINUOUS QUERY {} ON {} BEGIN {} END'.format(cq_name, db_name, cq ) %}
+    {%- set cq_name_on= 'CONTINUOUS QUERY {} ON {}'.format(cq_name, db_name) %}
+    {%- set query_continuous_query = '{} BEGIN {} END'.format(cq_name_on, cq) %}
 influxdb_continuous_query_{{db_name}}_{{ cq_name }}:
   cmd.run:
-    - name: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=CREATE {{ query_continuous_query }}"|grep -v "already exists" || {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=ALTER {{ query_continuous_query }}"
+    - name: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=CREATE {{ query_continuous_query }}"|grep -v "already exists" || {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode $'q=DROP {{ cq_name_on }};\nCREATE {{ query_continuous_query }}'| egrep -v error
     - onlyif: {{ curl_command }} -s -S -POST "{{ auth_url }}" --data-urlencode "q=SHOW DATABASES" | grep {{ db_name }}
 
   {%- endfor %}
