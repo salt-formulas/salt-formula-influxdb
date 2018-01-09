@@ -10,6 +10,6 @@ Vcs-Git: https://github.com/tcpcloud/salt-formula-influxdb.git
 
 Package: salt-formula-influxdb
 Architecture: all
-Depends: ${misc:Depends}, salt-master, reclass
+Depends: ${misc:Depends}
 Description: InfluxDB Salt formula
  Install and configure InfluxDB server.
