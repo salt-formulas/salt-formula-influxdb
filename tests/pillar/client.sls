@@ -1,6 +1,9 @@
 influxdb:
   client:
     enabled: true
+    retry:
+      count: 3
+      delay: 3
     server:
       protocol: http
       host: 127.0.0.1

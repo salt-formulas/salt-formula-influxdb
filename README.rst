@@ -264,6 +264,16 @@ InfluxDB client for configuring databases, users and retention policies:
             database: mydb1
             privilege: all
 
+InfluxDB client state's that uses curl can be forced to retry query if curl call fails:
+
+.. code-block:: yaml
+
+    influxdb:
+      client:
+        enabled: true
+        retry:
+          count: 3
+          delay: 3
 
 Create an continuous queries:
 

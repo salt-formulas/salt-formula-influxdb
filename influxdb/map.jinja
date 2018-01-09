@@ -52,6 +52,10 @@ default:
 
 {%- set client = salt['grains.filter_by']({
     'default': {
+      'retry': {
+          'count': 0,
+          'delay': 0
+      }
     },
 }, merge=salt['pillar.get']('influxdb:client')) %}
 

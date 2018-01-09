@@ -2,7 +2,7 @@
 
 {%- if client.get('enabled') %}
 
-{%- set curl_command = 'curl' %}
+{%- set curl_command = 'curl --retry {} --retry-delay {}'.format(client.retry.count, client.retry.delay) %}
 {%- if grains.get('noservices') %}
 {%- set curl_command = 'true ' + curl_command %}
 {%- endif %}
