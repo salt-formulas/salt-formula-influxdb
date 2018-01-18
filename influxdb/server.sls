@@ -36,22 +36,25 @@ influxdb_default:
     - pkg: influxdb_packages
 {%- endif %}
 
-{{server.data.dir}}:
+{{server.data.dir}}_influxdb:
   file.directory:
+    - name: {{server.data.dir}}
     - makedirs: True
     - mode: 755
     - user: {{ server.service_user }}
     - group: {{ server.service_group }}
 
-{{server.data.wal_dir}}:
+{{server.data.wal_dir}}_influxdb:
   file.directory:
+    - name: {{server.data.wal_dir}}
     - makedirs: True
     - mode: 755
     - user: {{ server.service_user }}
     - group: {{ server.service_group }}
 
-{{server.meta.dir}}:
+{{server.meta.dir}}_influxdb:
   file.directory:
+    - name: {{server.meta.dir}}
     - makedirs: True
     - mode: 755
     - user: {{ server.service_user }}
