@@ -287,6 +287,51 @@ Create an continuous queries:
               cq_avg_bus_passengers: >-
                 SELECT mean("passengers") INTO "transportation"."three_weeks"."average_passengers" FROM "bus_data" GROUP BY time(1h)
 
+
+Rich example for RP and CQ for Telegraf vmstats collected:
+
+.. code-block:: yaml
+
+    influxdb:
+      client:
+        database:
+           vmstats:
+             enabled: true
+             name: vmstats
+             retention_policy:
+             - name: a_week
+               duration: 10d
+               replication: 1
+             - name: a_month
+               duration: 30d
+               replication: 1
+             - name: a_quater
+               duration: 15w
+               replication: 1
+               is_default: true
+             - name: a_year
+               duration: 52w
+               replication: 1
+             - name: a_decade
+               duration: 520w
+               replication: 1
+             continuous_query:
+               cq_ds_all_1m: >-
+                 SELECT sum(*) as sum_1m, count(*) as count_1m, median(*) as median_1m, mode(*) as mode_1m, mean(*) as mean_1m, max(*) as max_1m, min(*) as min_1m INTO "vmstats"."a_week".:MEASUREMENT FRO
+               cq_ds_all_10m: >-
+                 SELECT sum(*) as sum_10m, count(*) as count_10m, median(*) as median_10m, mode(*) as mode_10m, mean(*) as mean_10m, max(*) as max_10m, min(*) as min_10m INTO "vmstats"."a_month".:MEASURE
+               cq_ds_all_h: >-
+                 SELECT sum(*) as sum_h, count(*) as count_h, median(*) as median_h, mode(*) as mode_h, mean(*) as mean_h, max(*) as max_h, min(*) as min_h INTO "vmstats"."a_month".:MEASUREMENT FROM /.*/
+               cq_ds_all_d: >-
+                 SELECT sum(*) as sum_d, count(*) as count_d, median(*) as median_d, mode(*) as mode_d, mean(*) as mean_d, max(*) as max_d, min(*) as min_d INTO "vmstats"."a_year".:MEASUREMENT FROM /.*/
+               cq_ds_all_w: >-
+                 SELECT sum(*) as sum_w, count(*) as count_w, median(*) as median_w, mode(*) as mode_w, mean(*) as mean_w, max(*) as max_w, min(*) as min_w INTO "vmstats"."a_year".:MEASUREMENT FROM /.*/
+               cq_ds_all_m: >-
+                 SELECT sum(*) as sum_m, count(*) as count_m, median(*) as median_m, mode(*) as mode_m, mean(*) as mean_m, max(*) as max_m, min(*) as min_m INTO "vmstats"."a_decade".:MEASUREMENT FROM /.*
+               cq_ds_all_y: >-
+                 SELECT sum(*) as sum_y, count(*) as count_y, median(*) as median_y, mode(*) as mode_y, mean(*) as mean_y, max(*) as max_y, min(*) as min_y INTO "vmstats"."a_decade".:MEASUREMENT FROM /.*
+
+
 Prunning data and data management:
 
 Intended to use in scheduled jobs, executed to maintain data life cycle above retention policy. These states are executed by
