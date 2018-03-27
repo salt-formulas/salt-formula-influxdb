@@ -152,6 +152,11 @@ server:
         endpoint:
         - address: {{ addresses[0] }}
           port: {{ relay.telemetry.bind.port }}
+        relabel_configs:
+          - regex: {{ addresses[0] }}:{{ relay.telemetry.bind.port }}
+            replacement: {{ grains['host'] }}
+            source_labels: "__address__"
+            target_label: "host"
 
 {%- endif %}
 
