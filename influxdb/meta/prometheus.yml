@@ -5,98 +5,108 @@
 server:
   alert:
 {%- if server.get('http', {}).get('enabled', False) %}
-    InfluxdbInfo:
+{%- raw %}
+    InfluxdbServiceDown:
       if: >-
         influxdb_up == 0
       labels:
-        severity: info
+        severity: minor
         service: influxdb
       annotations:
-      {%- raw %}
-        summary: 'InfluxDB service down'
-        description: 'InfluxDB service is down on node {{ $labels.host }}'
+        summary: "InfluxDB service is down"
+        description: "The InfluxDB service on the {{ $labels.host }} node is down."
+    InfluxdbServicesDownMinor:
       {%- endraw %}
-    InfluxdbWarning:
       if: >-
         count(influxdb_up == 0) >= count(influxdb_up) * {{ monitoring.service_failed_warning_threshold_percent }}
+      {%- raw %}
       labels:
-        severity: warning
+        severity: minor
         service: influxdb
       annotations:
-        summary: 'More than {{monitoring.service_failed_warning_threshold_percent*100}}% of InfluxDB services are down'
-        description: 'More than {{monitoring.service_failed_warning_threshold_percent*100}}% of InfluxDB services are down'
-    InfluxdbCritical:
+        summary: "{%- endraw %}{{ monitoring.service_failed_warning_threshold_percent*100 }}{%- raw %}% of InfluxDB services are down"
+        description: "{{ $value }} InfluxDB services are down (at least {%- endraw %} {{ monitoring.service_failed_warning_threshold_percent*100 }}{%- raw %}%)."
+    InfluxdbServicesDownMajor:
+      {%- endraw %}
       if: >-
         count(influxdb_up == 0) >= count(influxdb_up) * {{ monitoring.service_failed_critical_threshold_percent }}
+      {%- raw %}
       labels:
-        severity: critical
+        severity: major
         service: influxdb
       annotations:
-        summary: 'More than {{monitoring.service_failed_critical_threshold_percent*100}}% of InfluxDB services are down'
-        description: 'More than {{monitoring.service_failed_critical_threshold_percent*100}}% of InfluxDB services are down'
-    InfluxdbDown:
+        summary: "{%- endraw %}{{ monitoring.service_failed_critical_threshold_percent*100 }}{%- raw %}% of InfluxDB services are down"
+        description: "{{ $value }} InfluxDB services are down (at least {%- endraw %} {{ monitoring.service_failed_critical_threshold_percent*100 }}{%- raw %}%)."
+    InfluxdbServiceOutage:
       if: >-
         count(influxdb_up == 0) == count(influxdb_up)
       labels:
-        severity: down
+        severity: critical
         service: influxdb
       annotations:
-        summary: 'All InfluxDB services are down'
-        description: 'All InfluxDB services are down'
-    InfluxdbSeriesNumberHigh:
+        summary: "InfluxDB service outage"
+        description: "All InfluxDB services are down."
+    InfluxdbSeriesMaxNumberWarning:
+      {%- endraw %}
       {%- set influx_max_series_threshold = monitoring.max_series_percentage * server.data.max_series_per_database / 100 %}
       if: >-
         influxdb_database_numSeries >= {{ influx_max_series_threshold }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb
       annotations:
-      {% raw %}
-        summary: 'InfluxDB high number of series for {{ $labels.database }}'
-        description: 'The InfluxDB {{ $labels.database }} database is getting close to the maximum number of series (value={{ $value }}{%- endraw %},threshold={{ influx_max_series_threshold }}).'
-    InfluxdbSeriesNumberTooHigh:
+        summary: "{%- endraw %}{{ influx_max_series_threshold }}{%- raw %} time series in {{ $labels.database }} database"
+        description: "The InfluxDB {{ $labels.database }} database contains {{ $value }} time series."
+    InfluxdbSeriesMaxNumberCritical:
+      {%- endraw %}
       if: >-
         influxdb_database_numSeries >= {{ server.data.max_series_per_database }}
+      {%- raw %}
       labels:
         severity: critical
         service: influxdb
       annotations:
-      {% raw %}
-        summary: 'InfluxDB too many series for {{ $labels.database }}'
-        description: 'The InfluxDB {{ $labels.database }} database has exceeded the maximum number of series (value={{ $value }}{%- endraw %},threshold={{ server.data.max_series_per_database }}).'
-    InfluxdbHTTPClientErrors:
+        summary: "Maximum number of time series in the {{ $labels.database }} database"
+        description: "The InfluxDB {{ $labels.database }} database contains {{ $value }} time series. No more series can be saved."
+    InfluxdbHTTPClientErrorsWarning:
+      {%- endraw %}
       {%- set influx_http_client_error_threshold = monitoring.http_errors_percentage %}
       if: >-
-        rate(influxdb_httpd_clientError[2m]) / rate(influxdb_httpd_req[2m]) * 100 > {{ influx_http_client_error_threshold }}
-      {% raw %}
+        rate(influxdb_httpd_clientError[1m]) / rate(influxdb_httpd_req[1m]) * 100 > {{ influx_http_client_error_threshold }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb
       annotations:
-        summary: 'Influxdb number of client errors is high'
-        description: '{{ printf `%.1f` $value }}% of client requests are in error on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_client_error_threshold }}).'
-    InfluxdbHTTPPointsWrittenFail:
+        summary: "{%- endraw %}{{ influx_http_client_error_threshold }}{%- raw %}% of HTTP client errors"
+        description: "An average of {{ printf `%.1f` $value }}% of HTTP client requests on the {{ $labels.host }} node fail."
+    InfluxdbHTTPPointsWritesFailWarning:
+      {%- endraw %}
       {%- set influx_http_points_written_fail_threshold = monitoring.failed_points_percentage %}
       if: >-
-        rate(influxdb_httpd_pointsWrittenFail[2m]) / rate(influxdb_httpd_pointsWrittenOK[2m]) * 100 > {{ influx_http_points_written_fail_threshold }}
-      {% raw %}
+        rate(influxdb_httpd_pointsWrittenFail[1m]) / (rate(influxdb_httpd_pointsWrittenOK[1m]) + rate(influxdb_httpd_pointsWrittenFail[1m]) + rate(influxdb_httpd_pointsWrittenDropped[1m])) * 100 > {{ influx_http_points_written_fail_threshold }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb
       annotations:
-        summary: 'Influxdb too many failed writes'
-        description: '{{ printf `%.1f` $value }}% of written points have failed on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_points_written_fail_threshold }}).'
-    InfluxdbHTTPPointsWrittenDropped:
+        summary: "{%- endraw %}{{ influx_http_points_written_fail_threshold }}{%- raw %}% of HTTP points writes fail"
+        description: "An average of {{ printf `%.1f` $value }}% of HTTP points writes on the {{ $labels.host }} node fail."
+    InfluxdbHTTPPointsWritesDropWarning:
+      {%- endraw %}
       {%- set influx_http_points_written_dropped_threshold = monitoring.dropped_points_percentage %}
       if: >-
-        rate(influxdb_httpd_pointsWrittenDropped[2m]) / rate(influxdb_httpd_pointsWrittenOK[2m]) * 100 > {{ influx_http_points_written_dropped_threshold }}
-      {% raw %}
+        rate(influxdb_httpd_pointsWrittenDropped[1m]) / (rate(influxdb_httpd_pointsWrittenOK[1m]) + rate(influxdb_httpd_pointsWrittenFail[1m]) + rate(influxdb_httpd_pointsWrittenDropped[1m])) * 100 > {{ influx_http_points_written_dropped_threshold }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb
       annotations:
-        summary: 'Influxdb too many dropped writes'
-        description: '{{ printf `%.1f` $value }}% of written points have been dropped on {{ $labels.host }} (threshold={%- endraw %}{{ influx_http_points_written_dropped_threshold }}).'
+        summary: "{%- endraw %}{{ influx_http_points_written_dropped_threshold }}{%- raw %}% of HTTP points writes were dropped"
+        description: "An average of {{ printf `%.1f` $value }}% of HTTP points writes on the {{ $labels.host }} node were dropped."
+{%- endraw %}
+
 {%- if relay.get('enabled', False) and relay.telemetry is defined and relay.telemetry.get('enabled') %}
     {%- set buffer_sizes = [] %}
     {%- for name, listen in relay.listen.iteritems()|sort %}
@@ -107,34 +117,32 @@ server:
     {%- set buffer_sizes = buffer_sizes|sort %}
     {%- set buffer_size = buffer_sizes[-1] * 1024 * 1024 %}
     {%- if buffer_size > 0 %}
-    InfluxdbRelayBufferNearFull:
-      {%- set influx_relay_buffer_size_threshold = monitoring.max_relay_buffer_percentage %}
+    InfluxdbRelayBufferFullWarning:
       if: >-
-        influxdb_relay_backend_buffer_bytes > {{ buffer_size }} * {{ influx_relay_buffer_size_threshold }} / 100
-      {% raw %}
+        influxdb_relay_backend_buffer_bytes / {{ buffer_size }} * 100 > {{ monitoring.max_relay_buffer_percentage }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb-relay
       annotations:
-        summary: 'InfluxDB Relay buffer almost full'
-        description: 'The buffer size for the {{ $labels.instance }}/{{ $labels.backend }} backend is getting full (current value={{ $value }} bytes, threshold={%- endraw %}{{ buffer_size * influx_relay_buffer_size_threshold / 100 }}).'
+        summary: "InfluxDB Relay buffer is {%- endraw %} {{ monitoring.max_relay_buffer_percentage }}{%- raw %}% full"
+        description: "The InfluxDB Relay {{ $labels.host }}/{{ $labels.backend }} back-end buffer is {{ $value }}% full."
+    {%- endraw %}
     {%- endif %}
-    InfluxdbRelayFailedRequests:
-      {%- set influx_relay_failed_requests_threshold = monitoring.relay_failed_requests_percentage %}
+    InfluxdbRelayRequestsFailWarning:
       if: >-
-        rate(influxdb_relay_failed_requests_total[5m]) / rate(influxdb_relay_requests_total[5m]) * 100 > {{ influx_relay_failed_requests_threshold }}
-      {% raw %}
+        rate(influxdb_relay_failed_requests_total[1m]) / rate(influxdb_relay_requests_total[1m]) * 100 > {{ monitoring.relay_failed_requests_percentage }}
+      {%- raw %}
       labels:
         severity: warning
         service: influxdb-relay
       annotations:
-        summary: 'InfluxDB Relay too many failed requests'
-        description: '{{ printf `%.1f` $value }}% of requests have been dropped on {{ $labels.instance }} (threshold={%- endraw %}{{ influx_relay_failed_requests_threshold }}).'
-
+        summary: "{%- endraw %}{{ monitoring.relay_failed_requests_percentage }}{%- raw %}% of requests fail"
+        description: "An average of {{ printf `%.1f` $value }}% of InfluxDB Relay requests on the {{ $labels.host }} node fail."
+{%- endraw %}
 {%- endif %}
 
 {%- if relay.get('enabled') and relay.telemetry.get('enabled') %}
-
 {%- set addresses = [] %}
 {%- if relay.telemetry.get('bind', {}).address is defined and not relay.telemetry.bind.address.startswith('127') and relay.telemetry.bind.address != '0.0.0.0' %}
 {%- do addresses.append(relay.telemetry.bind.address) %}
@@ -144,7 +152,6 @@ server:
 {%- do addresses.append(address) %}
 {%- endif %}
 {%- endfor %}
-
   target:
     static:
       influxdb_relay:
