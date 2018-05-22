@@ -288,6 +288,30 @@ Create an continuous queries:
                 SELECT mean("passengers") INTO "transportation"."three_weeks"."average_passengers" FROM "bus_data" GROUP BY time(1h)
 
 
+Example how to add options to http/udp/data/admin that are not supported by the formula yet:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        enabled: true
+        http:
+          enabled: true
+          raw_rules:
+            - 'max-row-limit = 20000'
+        udp:
+          enabled: true
+          raw_rules:
+            - 'max-row-limit = 20000'
+        data:
+          enabled: true
+          raw_rules:
+            - 'something_else = 10'
+        admin:
+          raw_rules:
+            - 'something_here = 55'
+
+
 Rich example for RP and CQ for Telegraf vmstats collected:
 
 .. code-block:: yaml
