@@ -25,7 +25,7 @@ server:
         service: influxdb
       annotations:
         summary: "{%- endraw %}{{ monitoring.service_failed_warning_threshold_percent*100 }}{%- raw %}% of InfluxDB services are down"
-        description: "{{ $value }} InfluxDB services are down (at least {%- endraw %} {{ monitoring.service_failed_warning_threshold_percent*100 }}{%- raw %}%)."
+        description: "{{ $value }} InfluxDB services (>= {%- endraw %} {{ monitoring.service_failed_warning_threshold_percent*100 }}{%- raw %}%) are down."
     InfluxdbServicesDownMajor:
       {%- endraw %}
       if: >-
@@ -36,7 +36,7 @@ server:
         service: influxdb
       annotations:
         summary: "{%- endraw %}{{ monitoring.service_failed_critical_threshold_percent*100 }}{%- raw %}% of InfluxDB services are down"
-        description: "{{ $value }} InfluxDB services are down (at least {%- endraw %} {{ monitoring.service_failed_critical_threshold_percent*100 }}{%- raw %}%)."
+        description: "{{ $value }} InfluxDB services (>= {%- endraw %} {{ monitoring.service_failed_critical_threshold_percent*100 }}{%- raw %}%) are down."
     InfluxdbServiceOutage:
       if: >-
         count(influxdb_up == 0) == count(influxdb_up)
@@ -56,7 +56,7 @@ server:
         severity: warning
         service: influxdb
       annotations:
-        summary: "{%- endraw %}{{ influx_max_series_threshold }}{%- raw %} time series in {{ $labels.database }} database"
+        summary: "Reached {%- endraw %}{{ influx_max_series_threshold }}%{%- raw %} of time series in the InfluxDB {{ $labels.database }} database"
         description: "The InfluxDB {{ $labels.database }} database contains {{ $value }} time series."
     InfluxdbSeriesMaxNumberCritical:
       {%- endraw %}
@@ -67,7 +67,7 @@ server:
         severity: critical
         service: influxdb
       annotations:
-        summary: "Maximum number of time series in the {{ $labels.database }} database"
+        summary: "Reached maximum number of time series in the InfluxDB {{ $labels.database }} database"
         description: "The InfluxDB {{ $labels.database }} database contains {{ $value }} time series. No more series can be saved."
     InfluxdbHTTPClientErrorsWarning:
       {%- endraw %}
@@ -91,7 +91,7 @@ server:
         severity: warning
         service: influxdb
       annotations:
-        summary: "{%- endraw %}{{ influx_http_points_written_fail_threshold }}{%- raw %}% of HTTP points writes fail"
+        summary: "{%- endraw %}{{ influx_http_points_written_fail_threshold }}{%- raw %}% of InfluxDB HTTP points writes fail"
         description: "An average of {{ printf `%.1f` $value }}% of HTTP points writes on the {{ $labels.host }} node fail."
     InfluxdbHTTPPointsWritesDropWarning:
       {%- endraw %}
@@ -103,7 +103,7 @@ server:
         severity: warning
         service: influxdb
       annotations:
-        summary: "{%- endraw %}{{ influx_http_points_written_dropped_threshold }}{%- raw %}% of HTTP points writes were dropped"
+        summary: "{%- endraw %}{{ influx_http_points_written_dropped_threshold }}{%- raw %}% of InfluxDB HTTP points writes were dropped"
         description: "An average of {{ printf `%.1f` $value }}% of HTTP points writes on the {{ $labels.host }} node were dropped."
 {%- endraw %}
 
@@ -137,7 +137,7 @@ server:
         severity: warning
         service: influxdb-relay
       annotations:
-        summary: "{%- endraw %}{{ monitoring.relay_failed_requests_percentage }}{%- raw %}% of requests fail"
+        summary: "{%- endraw %}{{ monitoring.relay_failed_requests_percentage }}{%- raw %}% of InfluxDB Relay requests fail"
         description: "An average of {{ printf `%.1f` $value }}% of InfluxDB Relay requests on the {{ $labels.host }} node fail."
 {%- endraw %}
 {%- endif %}
