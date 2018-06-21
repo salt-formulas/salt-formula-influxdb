@@ -5,7 +5,7 @@
       {
         "$$hashKey": "object:4846",
         "builtIn": 1,
-        "datasource": "-- Grafana --",
+        "datasource": "prometheus",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -43,7 +43,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#299c46"
       ],
-      "datasource": "prometheus",
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -148,7 +148,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "prometheus",
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -228,7 +228,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "prometheus",
+      "datasource": null,
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -318,7 +318,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": null,
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -415,7 +415,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": null,
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -516,7 +516,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": null,
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -614,7 +614,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "prometheus",
+      "datasource": null,
       "fill": 1,
       "gridPos": {
         "h": 7,
@@ -718,7 +718,7 @@
             "$__all"
           ]
         },
-        "datasource": "prometheus",
+        "datasource": null,
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -743,7 +743,7 @@
             "$__all"
           ]
         },
-        "datasource": "prometheus",
+        "datasource": null,
         "hide": 0,
         "includeAll": true,
         "label": null,
