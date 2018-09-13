@@ -56,7 +56,7 @@ server:
         severity: warning
         service: influxdb
       annotations:
-        summary: "Reached {%- endraw %}{{ influx_max_series_threshold }}%{%- raw %} of time series in the InfluxDB {{ $labels.database }} database"
+        summary: "Reached{%- endraw %} {{ influx_max_series_threshold }}%{%- raw %} of time series in the InfluxDB {{ $labels.database }} database"
         description: "The InfluxDB {{ $labels.database }} database contains {{ $value }} time series."
     InfluxdbSeriesMaxNumberCritical:
       {%- endraw %}
