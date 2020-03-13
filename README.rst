@@ -79,6 +79,21 @@ InfluxDB server with customized parameters for the data service:
           compact_full_write_cold_duration: "2h"2h"
           max_values_per_tag: 5000
 
+InfluxDB server Monitor and Logging options
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        monitor:
+          store_enabled: 'false'
+          store_database: '_internal'
+          store_interval: '10s'
+        logging:
+          format: auto
+          level: error
+          suppress_logo: false
+
+
 Single-node influxdb with an admin user:
 
 .. code-block:: yaml
