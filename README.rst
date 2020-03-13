@@ -8,6 +8,16 @@ InfluxData is based on the TICK stack, the first open source platform for managi
 Sample pillars
 ==============
 
+Single-node influxdb, select a version from a custom repo and hold it:
+
+.. code-block:: yaml
+
+    influxdb:
+      server:
+        version: 1.7.10-1
+        repo: 'custom-repo'
+        hold: true
+        
 Single-node influxdb, enabled http frontend and admin web interface:
 
 .. code-block:: yaml

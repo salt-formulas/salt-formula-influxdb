@@ -7,6 +7,15 @@ influxdb_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
   - force_yes: True
+  {%- if server.version is defined %}
+  - version: {{ server.version }}
+  {%- endif %}
+  {%- if server.hold is defined %}
+  - hold: {{ servere.hold }}
+  {%- endif %}
+  {%- if server.repo is defined %}
+  - fromrepo: {{ server.repo }}
+  {%- endif %}
 {%- endif %}
 
 {{ server.prefix_dir }}/etc/influxdb:
@@ -93,7 +102,7 @@ influxdb_create_admin:
 
 # An admin must exist before creating others users
 {%- if admin_created %}
-  {%- for user_name, user in server.get('user', {}).iteritems() %}
+  {%- for user_name, user in server.get('user', {}).items() %}
     {%- if user.get('enabled', False) %}
       {%- if user.get('admin', False) %}
         {% set query_create_user = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}' WITH ALL PRIVILEGES\"".format(user.name, user.password) %}
@@ -110,7 +119,7 @@ influxdb_create_user_{{user.name}}:
   {%- endfor %}
 {%- endif %}
 
-{%- for db_name, db in server.get('database', {}).iteritems() %}
+{%- for db_name, db in server.get('database', {}).items() %}
   {%- if db.get('enabled', False) %}
     {% set query_create_db = "--data-urlencode \"q=CREATE DATABASE {}\"".format(db.name) %}
 influxdb_create_db_{{db.name}}:
@@ -151,7 +160,7 @@ influxdb_retention_policy_{{db.name}}_{{ rp_name }}:
 
 # An admin must exist to manage grants, otherwise there is no user.
 {%- if admin_created %}
-{%- for grant_name, grant in server.get('grant', {}).iteritems() %}
+{%- for grant_name, grant in server.get('grant', {}).items() %}
   {%- if grant.get('enabled', False) %}
     {% set query_grant_user_access = "--data-urlencode \"q=GRANT {} ON {} TO {}\"".format(grant.privilege, grant.database, grant.user) %}
 influxdb_grant_{{grant_name}}:
