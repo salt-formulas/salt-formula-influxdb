@@ -7,6 +7,15 @@ influxdb_packages:
   pkg.installed:
   - names: {{ server.pkgs }}
   - force_yes: True
+  {%- if server.version is defined %}
+  - version: {{ server.version }}
+  {%- endif %}
+  {%- if server.hold is defined %}
+  - hold: {{ servere.hold }}
+  {%- endif %}
+  {%- if server.repo is defined %}
+  - fromrepo: {{ server.repo }}
+  {%- endif %}
 {%- endif %}
 
 {{ server.prefix_dir }}/etc/influxdb:
