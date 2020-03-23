@@ -5,9 +5,9 @@
 
 {%- set mconf = pillar.salt.minion.get('config', {}).get('influxdb') %}
 
-{%- for db_name,db in client.get('database', {}).iteritems() %}
+{%- for db_name,db in client.get('database', {}).items() %}
 {%- set db_name = db.get('name', db_name) %}
-{%- for qr_name,qr in db.get('query', {}).iteritems() %}
+{%- for qr_name,qr in db.get('query', {}).items() %}
 
 {%- if qr is string %}
 {%- set query = { 'query': qr } %}

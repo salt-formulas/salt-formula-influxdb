@@ -17,7 +17,7 @@ influxdb_create_admin:
   - name: {{ curl_command }} -f -S -POST "{{ noauth_url }}" {{ create_admin_query }} || {{ curl_command }} -f -S -POST "{{ auth_url }}" {{ create_admin_query }}
 
 {# Create the regular users #}
-{%- for user_name, user in client.get('user', {}).iteritems() %}
+{%- for user_name, user in client.get('user', {}).items() %}
   {%- if user.get('enabled', False) %}
       {%- if user.get('admin', False) %}
         {% set create_user_query = "--data-urlencode \"q=CREATE USER {} WITH PASSWORD '{}' WITH ALL PRIVILEGES\"".format(user.name, user.password) %}
@@ -33,7 +33,7 @@ influxdb_create_user_{{user.name}}:
 {%- endfor %}
 
 {# Create the databases #}
-{%- for db_name, db in client.get('database', {}).iteritems() %}
+{%- for db_name, db in client.get('database', {}).items() %}
   {%- if db.get('enabled', False) %}
     {% set create_db_query = "--data-urlencode \"q=CREATE DATABASE {}\"".format(db.name) %}
 influxdb_create_db_{{ db.name }}:
@@ -68,7 +68,7 @@ influxdb_retention_policy_{{db.name}}_{{ rp_name }}:
   {%- endif %}
 {%- endfor %}
 
-{%- for grant_name, grant in client.get('grant', {}).iteritems() %}
+{%- for grant_name, grant in client.get('grant', {}).items() %}
   {%- if grant.get('enabled', False) %}
     {% set query_grant_user_access = "--data-urlencode \"q=GRANT {} ON {} TO {}\"".format(grant.privilege, grant.database, grant.user) %}
 influxdb_grant_{{ grant_name }}:
@@ -83,9 +83,9 @@ influxdb_grant_{{ grant_name }}:
 
 {# CONTINUOUS QUERIES #}
 {# as of influxdb 1.4 CQ can't be altered #}
-{%- for db_name, db in client.get('database', {}).iteritems() %}
+{%- for db_name, db in client.get('database', {}).items() %}
   {%- set db_name = db.get('name', db_name) %}
-  {%- for cq_name, cq in db.get('continuous_query', {}).iteritems() %}
+  {%- for cq_name, cq in db.get('continuous_query', {}).items() %}
     {%- set cq_name_on= 'CONTINUOUS QUERY {} ON {}'.format(cq_name, db_name) %}
     {%- set query_continuous_query = '{} BEGIN {} END'.format(cq_name_on, cq) %}
 influxdb_continuous_query_{{db_name}}_{{ cq_name }}:
