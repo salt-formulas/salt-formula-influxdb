@@ -5,7 +5,7 @@
 {%- if not server.container_mode %}
 influxdb_packages:
   pkg.installed:
-  - names: {{ server.pkgs }}
+  - names: {{ server.pkgs|tojson }}
   - force_yes: True
   {%- if server.version is defined %}
   - version: {{ server.version }}
@@ -75,7 +75,7 @@ influxdb_service:
   - name: {{ server.service }}
   # This delay is needed before being able to send data to server to create
   # users and databases.
-  - init_delay: 5
+  - init_delay: 60
 {%- if grains.get('noservices') or server.container_mode %}
   - onlyif: /bin/false
 {%- endif %}

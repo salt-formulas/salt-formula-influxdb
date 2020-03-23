@@ -109,8 +109,8 @@ server:
 
 {%- if relay.get('enabled', False) and relay.telemetry is defined and relay.telemetry.get('enabled') %}
     {%- set buffer_sizes = [] %}
-    {%- for name, listen in relay.listen.iteritems()|sort %}
-      {%- for backend_name, backend in listen.output.iteritems()|sort %}
+    {%- for name, listen in relay.listen.items()|sort %}
+      {%- for backend_name, backend in listen.output.items()|sort %}
         {%- do buffer_sizes.append(backend.get('buffer_size_mb', 0)|float) %}
       {%- endfor %}
     {%- endfor %}
