@@ -24,6 +24,12 @@ default:
     bind:
       address: 0.0.0.0
       port: 8083
+  opentsdb:
+    enabled: false
+    database: 'opentsdb'
+    bind:
+      address: 0.0.0.0
+      port: 4242
   data:
     enabled: true
     dir: '/var/lib/influxdb/data'
